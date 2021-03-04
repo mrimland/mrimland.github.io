@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script>
+      function changeText(id) {
+           if id.display == none{
+            id.display = grid; 
+           }
+           else{
+             id.display = none;
+           }
+       }
+    </script>
     <style>
         * {
             margin: 0;
@@ -24,8 +34,8 @@
 <body>
 <h1>Hello World</h1>
 <p>I'm hosted with GitHub Pages.</p>
-  <div class="hideimg">
-    <img class="center-fit" src='mainquad.png'>
+  <div class="imgbox">
+    <img class="center-fit" onclick="hide(this)" src='mainquad.png'>
 </div>
 </body>
 </html>
