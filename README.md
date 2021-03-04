@@ -1,36 +1,19 @@
-## Welcome to GitHub Pages
+## Pokémon Go Movements and their impact
 
-You can use the [editor on GitHub](https://github.com/mrimland/mrimland.github.io/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+The following is a project meant to illuminate possible underlying ulterior motives behind AR games, with a particular focus on Pokémon Go
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Pokémon Go
 
-### Markdown
+### Prototype Videos
+As a prototype, I enlisted a friend to help test my functionality, largely to test out pathing options and how they would traverse from one point to get to a "pokémon." In addition, after the path was complete, I asked him a few questions regarding whether he was aware of his path, the overall structure, as well as his eventual thoughts after I revealed the purpose of my project.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+The videos are down below
+https://www.youtube.com/watch?v=YbbJu6sRcuc
+https://www.youtube.com/watch?v=QBC_sYZjoyY
 
-```markdown
-Syntax highlighted code block
+Note: I tried to replicate the experience that a mobile app would give, and how I want my eventual project to be experienced. I did not let my friend know what my project was about. I also did not tell him the path, nor what to do until we met up. The actual pathing was formatted so I went to a specific location to act as a "pokémon" and then beckoned for him to come to me. 
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/mrimland/mrimland.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
 ### Support or Contact
 
