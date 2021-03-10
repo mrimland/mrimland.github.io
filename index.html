@@ -16,12 +16,13 @@
             margin: 0;
             padding: 0;
         }
-        body {
-          position: relative;
-          background-size: 100% 100%;
-        }
-        body::before {
-          background-image: url("Gargoyle.jpg");
+        background {
+           height: 100%;
+
+          /* Center and scale the image nicely */
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
           opacity: 0.5;
         }
         .bg {
@@ -66,6 +67,7 @@
     </style>
   </head>
 <body>
+ <img class="background" src='Gargoyle.jpg'>
 <h1 >Welcome to UChica Go!</h1>
 <p>Which Gargoyle do you want to capture first?</p>
   <div class="imgbox">
