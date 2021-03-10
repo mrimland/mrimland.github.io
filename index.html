@@ -51,6 +51,22 @@
             display: none;
             height: 100%;
       }
+      .demo-wrap {
+        overflow: hidden;
+        position: relative;
+      }
+
+    .demo-bg {
+      opacity: 0.6;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+    }
+      .demo-content {
+       position: relative;
+      }
         .center-fit {
             max-width: 100%;
             max-height: 100vh;
@@ -76,7 +92,9 @@
     </style>
   </head>
 <body>
- <img class="background" src='Gargoyle.jpg'>
+<div class="demo-wrap">
+  <img class="demo-bg" src="Gargoyle.jpg">
+  <div class="demo-content">
 <h1 >Welcome to UChica Go!</h1>
 <p>Which Gargoyle do you want to capture first?</p>
   <div class="imgbox">
@@ -86,5 +104,6 @@
     <button class="button button1">Go to the Green Path</button>
     <button class="button button2">Go to the Blue path</button>
     <button class="button button3" onclick="location.href = '/red1.html';">Go to the Red path</button>
+    </div></div></div></div>
 </body>
 </html>
