@@ -26,13 +26,22 @@
           opacity: 0.5;
         }
         .bg {
-          position: absolute;
-          height: 100%;
-          opacity: 50%;
-          background-position: center;
-          background-repeat: no-repeat;
-          background-size: cover;
+          position: relative;
           }
+        .bg:before {
+          content: ' ';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+  background-image: url('Gargoyle.jpg');
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+         }
         .imgbox {
             position: relative;
             display: grid;
