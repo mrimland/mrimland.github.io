@@ -38,9 +38,10 @@ The website here is a demo meant to focus on the UChicago quad and campus. Here,
 
 ### The future
 
+![plot](./android.png)
 
-
+I had issues with trying to develop an android app at least on my local machine with trying to emulate an android device. However, the next step for this project would be to develop an android app revolving around this premise. Especially given how specific the location permissions for android apps can be, it would probably be the most clear form for this project to take. In addition, an app would provide the closest experience to an app such as Pokémon Go!, which is what this project is attempting to replicate. Next, the app itself should use this location data to trace out the actual path taken by the user, as specifically as possible. This would help to reinforce the eventual confrontation stage of the app.
 
 ### Support or Contact
-
+If you wish to reach out, there is the feedback form that can be found after completing one cycle of the web demo. Otherwise, feel free to reach out at mrimland@gmail.com regarding possible development of the app or feedback.
 
