@@ -2,6 +2,8 @@
 
 The following is a project meant to illuminate possible underlying ulterior motives behind AR games, with a particular focus on Pokémon Go!
 
+You can experience the game at https://mrimland.github.io/
+
 ## Pokémon Go!
 
 Pokémon Go! is an Augmented Reality game that swept the US during Summer 2016. AR games inject game elements into our own world through smartphone elements such as a camera. The game, developed by Niantic, uses well known pokémon as ways to attract players and keep them playing. The appeal then is being able to see these creatures who were normally locked behind deviced "interact" with the world around us. 
