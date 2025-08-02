@@ -1,0 +1,24 @@
+body {
+  font-family: sans-serif;
+  margin: 20px;
+}
+
+controls {
+  margin-bottom: 20px;
+}
+
+#visual svg {
+  display: block;
+  margin: 20px;
+}
+
+#tooltip {
+    position: absolute; 
+    visibility: hidden; 
+    border: 3px solid #080808; 
+    padding: 6px 10px; 
+    font-size: 13px; 
+    border-radius: 4px; 
+    pointer-events: none;
+    fill: #eeeeee;
+}
