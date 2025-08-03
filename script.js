@@ -1,23 +1,32 @@
-const margin = { top: 30, right: 30, bottom: 100, left: 150 };
-const width = 900 - margin.left - margin.right;
+const margin = { top: 10, right: 30, bottom: 100, left: 250 };
+const width = 1000 - margin.left - margin.right;
 const height = 600 - margin.top - margin.bottom;
 
-let svg = d3.select("#visual")
+const oldConsoles = new Set(["WS","SCD","WS","NG","TG16","3DO","GG","PCFX"]);
+
+const message2000 = "The introduction of the Wii helped bring games to the more casual audience. Wii Sports being packaged with the Wii also made its sales skyrocket."
+const message2010 = "The 2010s see other companies try to capitalize on the Wii's success, as well as the rise of the shooter genre through Call of Duty."
+
+let step = 0;
+
+let svgExplore = d3.select("#explore")
   .append("svg")
-  .attr("width", 900)
+  .attr("width", 1000)
   .attr("height", 600)
   .append("g")
   .attr("transform", `translate(${margin.left},${margin.top})`);
 
+
 let data = [];
 let platforms = new Set();
 document.addEventListener("DOMContentLoaded", () => {
-    svg = d3.select("#visual")
-        .append("svg")
-        .attr("width", 900)
-        .attr("height", 600)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  svgExplore = d3.select("#explore")
+    .append("svg")
+    .attr("width", 1000)
+    .attr("height", 600)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
     d3.csv("data/vgsales.csv").then(raw => {
         data = raw
@@ -29,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             naSales: +d.NA_Sales,
             euSales: +d.EU_Sales,
             jpSales: +d.JP_Sales,
+            publisher: d.Publisher,
             globalSales: +d.Global_Sales
     }));
   // Get unique platforms for filter
@@ -38,20 +48,67 @@ document.addEventListener("DOMContentLoaded", () => {
   updatePlatformDropdown();
 
   // Initial render
-  updateChart();
+  renderStoryChart("explore", 1990, "globalSales", "all","Global Sales (Millions)");
+  //updateChart();
   
   // Event listeners
   d3.selectAll("#decade, #platform").on("change", updateChart);
+  });
 });
 
-});
+function advance() {
+  step += 1;
+  let button = document.getElementById("advance-stem");
+  let subtext = document.getElementById("subtext");
+  let controls = document.getElementById("interactive-controls");
+  let title =  document.getElementById("year-title");
+  switch(step){
+    case 0:
+      subtext.textContent = "Case 1990";
+      title.textContent = "1990-1999";
+      renderStoryChart("explore", 1990, "globalSales", "all","Global Sales (Millions)");
+      break;
+    case 1:
+      subtext.textContent = message2000;
+      title.textContent = "2000-2009";
+      renderStoryChart("explore", 2000, "globalSales", "all","Global Sales (Millions)");
+      break;
+    case 2:
+      subtext.textContent = message2010;
+      title.textContent = "2010-2016";
+      renderStoryChart("explore", 2010, "globalSales", "all","Global Sales (Millions)");
+      break;
+    default:
+      subtext.textContent = "Feel free to delve more into console and region specific data";
+      updateChart();
+      button.remove();
+      controls.style.visibility = "visible";
+  }
+}
 function updatePlatformDropdown() {
   const platformSelect = d3.select("#platform");
   platforms.forEach(p => {
-    platformSelect.append("option")
+    if (!oldConsoles.has(p))
+    {
+      platformSelect.append("option")
       .attr("value", p)
       .text(p);
+    }
   });
+}
+
+function renderStoryChart(containerId, decade, region, platform, annotationText) {
+  const decadeStart = +decade;
+  let filtered = data.filter(d =>
+    d.year >= decadeStart && d.year < decadeStart + 10 &&
+    (platform === "all" || d.platform === platform)
+  );
+
+  const topGames = filtered
+    .sort((a, b) => d3.descending(a[region], b[region]))
+    .slice(0, 20);
+
+  drawBarChart(topGames, region, annotationText, containerId);
 }
 
 function updateChart() {
@@ -86,13 +143,29 @@ function updateChart() {
     }})
     .slice(0, 20);
 
+    let axis_title = "Global Sales (Millions)";
+    switch (region) {
+      case "naSales": 
+                axis_title = "North America Sales (Millions)";
+                break;
+            case "euSales":
+                axis_title = "Europe Sales (Millions)";
+                break;
+            case "jpSales":
+                axis_title = "Japan Sales (Millions)";
+                break;
+            default:
+                axis_title = "Global Sales (Millions)";
+    }
+
   for(var i = 0; i < 20; i++) {
     console.log(topGames[i]);
   }
-  drawBarChart(topGames, region);
+  drawBarChart(topGames, region, axis_title);
 }
 
-function drawBarChart(games, regionSales) {
+function drawBarChart(games, regionSales, annotationText = null, containerId = "explore") {
+  let svg = svgExplore;
   // Scales
   const x = d3.scaleLinear()
     .domain([0, d3.max(games, d => d[regionSales])])
@@ -108,24 +181,6 @@ function drawBarChart(games, regionSales) {
   // JOIN
   const bars = svg.selectAll("rect").data(games, d => d.name);
 
-  const annotations = [
-  {
-    note: {
-      label: "game globally",
-      title: games[0].name
-    },
-    data: games[10],
-    dx: 20,
-    dy: -10,
-    subject: {
-      width: 50,
-      height: 20
-    },
-    connector: { end: "arrow" },
-    x: x(games[10]),
-    y: y(games[10])
-  }
-];
 
 
   // EXIT
@@ -155,9 +210,10 @@ function drawBarChart(games, regionSales) {
         <strong>${d.name}</strong><br>
         Platform: ${d.platform}<br>
         Year: ${d.year}<br>
-        Sales: ${d[regionSales].toFixed(2)}Million
+        Publisher: ${d.publisher} <br>
+        Regional Sales: ${d[regionSales].toFixed(2)} Million <br>
+        Global Sales: ${d.globalSales.toFixed(2)} Million
       `);
-     // optional highlight
   })
   .on("mousemove", function(event) {
     tooltip
@@ -173,31 +229,34 @@ function drawBarChart(games, regionSales) {
     .attr("width", d => x(d[regionSales]));
 
   // Axes
-  svg.selectAll(".x-axis").remove();
   svg.selectAll(".y-axis").remove();
+// Update or create the x-axis group
+let xAxisGroup = svg.select(".x-axis");
 
-  svg.append("g")
+if (xAxisGroup.empty()) {
+  xAxisGroup = svg.append("g")
     .attr("class", "x-axis")
-    .attr("text-anchor", "Total sales (Millions)")
-    .attr("transform", `translate(0, ${height})`)
-    .call(d3.axisBottom(x));
+    .attr("transform", `translate(0, ${height})`);
+}
 
-  svg.append("text")
-  .attr("class", "x-axis-label")
-  .attr("text-anchor", "middle")
-  .attr("x", width / 2)
-  .attr("y", height + 40) // some space below the axis
-  .text("Global Sales (millions)");
+xAxisGroup.transition()
+  .duration(500)
+  .call(d3.axisBottom(x));
+
+// Update or create x-axis label
+let xLabel = svg.select(".x-axis-label");
+
+if (xLabel.empty()) {
+  xLabel = svg.append("text")
+    .attr("class", "x-axis-label")
+    .attr("text-anchor", "middle")
+    .attr("x", width / 2)
+    .attr("y", height + 40);
+}
+
+xLabel.text(annotationText || "Sales (millions)");
 
   svg.append("g")
     .attr("class", "y-axis")
     .call(d3.axisLeft(y));
-
-//   const makeAnnotations = d3.annotation()
-//     .type(d3.annotationLabel)
-//     .annotations(annotations);
-
-//   svg.append("g")
-//     .attr("class", "annotation-group")
-//     .call(makeAnnotations);
 }
