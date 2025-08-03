@@ -13,15 +13,14 @@
   <h1>Top Video Game Sales</h1>
   <p>As video games have grown in popularity, it's insightful to see the changes in the most popular games by sales over decades.<br>
     Data derived from <a href="https://www.kaggle.com/datasets/gregorut/videogamesales/data" target="_blank">Kaggle</a></p>
-  <!-- 🔹 Explore Section (Interactive Chart) -->
   <section id="explore-section">
     <div id="advance-stem" style="visibility:visible">
       <h2 id="year-title">1990-1999</h2>
-      <p id="subtext">The 90s saw the proliferation of Pokemon in addition to Nintendo home console games. The introduction of the portable Gameboy also led game being more accessible.</p>
+      <p id="subtext">The 90s saw the introduction of the Gameboy, the jump to 3D on home consoles, and other genre defining games like Final Fantasy and Super Mario 64.</p>
       <button onclick="advance()">Next Decade</button>
     </div>
     <div id="interactive-controls" class="controls" style="visibility: hidden;">
-      <h2>Explore the History</h2>
+      <h2>Explore the History. Hover to see additional details.</h2>
       <label for="decade">Decade:</label>
       <select id="decade" onchange="updateChart()">
         <option value="all">All</option>
@@ -44,7 +43,6 @@
     </div>
     </section>
     <div id="explore"></div>
-
   <div id="tooltip"></div>
 </body>
 </html>

@@ -4,8 +4,8 @@ const height = 600 - margin.top - margin.bottom;
 
 const oldConsoles = new Set(["WS","SCD","WS","NG","TG16","3DO","GG","PCFX"]);
 
-const message2000 = "The introduction of the Wii helped bring games to the more casual audience. Wii Sports being packaged with the Wii also made its sales skyrocket."
-const message2010 = "The 2010s see other companies try to capitalize on the Wii's success, as well as the rise of the shooter genre through Call of Duty."
+const message2000 = "The introduction of the Wii helped bring games to the more casual audience, with Wii Sports leading the charge."
+const message2010 = "The 2010s see other companies try to capitalize on the Wii's success, as well as the rise of the shooter genres for next gen consoles."
 
 let step = 0;
 
@@ -104,10 +104,13 @@ function renderStoryChart(containerId, decade, region, platform, annotationText)
     (platform === "all" || d.platform === platform)
   );
 
+
+
   const topGames = filtered
     .sort((a, b) => d3.descending(a[region], b[region]))
     .slice(0, 20);
 
+  
   drawBarChart(topGames, region, annotationText, containerId);
 }
 
@@ -164,7 +167,7 @@ function updateChart() {
   drawBarChart(topGames, region, axis_title);
 }
 
-function drawBarChart(games, regionSales, annotationText = null, containerId = "explore") {
+function drawBarChart(games, regionSales, region = null, containerId = "explore") {
   let svg = svgExplore;
   // Scales
   const x = d3.scaleLinear()
@@ -254,9 +257,70 @@ if (xLabel.empty()) {
     .attr("y", height + 40);
 }
 
-xLabel.text(annotationText || "Sales (millions)");
+xLabel.text(region || "Sales (millions)");
 
-  svg.append("g")
-    .attr("class", "y-axis")
-    .call(d3.axisLeft(y));
+svg.append("g")
+  .attr("class", "y-axis")
+  .call(d3.axisLeft(y));
+
+// Remove any existing annotations
+svg.selectAll(".annotation-group").remove();
+
+// Build the annotations for specific decades
+  let annotations = [];
+
+   if (step == 0) {
+    const game = games.find(d => d.name.includes("Pikachu"));
+    if (game) {
+      annotations.push({
+        note: {
+          label: `Portable Pokemon games dominated sales`
+        },
+        x: x(game[regionSales]),
+        y: (y(game.name) + y.bandwidth() / 2),
+        dx: 50,
+        dy: 30
+      });
+    }
+  }
+
+  if (step == 1) {
+    const game = games.find(d => d.name.includes("Wii Sports"));
+    if (game) {
+      annotations.push({
+        note: {
+          label: "Simpler games that were more intuitive with the Wii were popular"
+        },
+        x: x(game[regionSales]) - 300,
+        y: (y(game.name) + y.bandwidth() / 2) + 30,
+        dx: 0,
+        dy: 0,
+        connector: {
+          type: "none"
+        }
+      });
+    }
+  }
+
+  if (step == 2) {
+    const game = games.find(d => d.name.includes("Call of Duty"));
+    if (game) {
+      annotations.push({
+        note: {
+          label: `Call of Duty and other realistic games rise in popularity`
+        },
+        x: x(game[regionSales]),
+        y: y(game.name) + y.bandwidth() / 2,
+        dx: 50,
+        dy: 30
+      });
+    }
+  }
+  if (annotations.length > 0) {
+    const makeAnnotations = d3.annotation().annotations(annotations);
+
+    svg.append("g")
+      .attr("class", "annotation-group")
+      .call(makeAnnotations);
+  }
 }
