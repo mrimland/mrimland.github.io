@@ -8,6 +8,7 @@ const message2000 = "The introduction of the Wii helped bring games to the more 
 const message2010 = "The 2010s see other companies try to capitalize on the Wii's success, as well as the rise of the shooter genres for next gen consoles."
 
 let step = 0;
+let currRegion = "globalSales";
 
 let svgExplore = d3.select("#explore")
   .append("svg")
@@ -48,11 +49,11 @@ document.addEventListener("DOMContentLoaded", () => {
   updatePlatformDropdown();
 
   // Initial render
-  renderStoryChart("explore", 1990, "globalSales", "all","Global Sales (Millions)");
+  renderStoryChart(1990, "globalSales", "all","Global Sales (Millions)");
   //updateChart();
   
   // Event listeners
-  d3.selectAll("#decade, #platform").on("change", updateChart);
+  d3.selectAll("#decade, #platform, #region").on("change", updateChart);
   });
 });
 
@@ -66,17 +67,17 @@ function advance() {
     case 0:
       subtext.textContent = "Case 1990";
       title.textContent = "1990-1999";
-      renderStoryChart("explore", 1990, "globalSales", "all","Global Sales (Millions)");
+      renderStoryChart(1990, "globalSales", "all","Global Sales (Millions)");
       break;
     case 1:
       subtext.textContent = message2000;
       title.textContent = "2000-2009";
-      renderStoryChart("explore", 2000, "globalSales", "all","Global Sales (Millions)");
+      renderStoryChart(2000, "globalSales", "all","Global Sales (Millions)");
       break;
     case 2:
       subtext.textContent = message2010;
       title.textContent = "2010-2016";
-      renderStoryChart("explore", 2010, "globalSales", "all","Global Sales (Millions)");
+      renderStoryChart(2010, "globalSales", "all","Global Sales (Millions)");
       break;
     default:
       subtext.textContent = "Feel free to delve more into console and region specific data";
@@ -97,7 +98,7 @@ function updatePlatformDropdown() {
   });
 }
 
-function renderStoryChart(containerId, decade, region, platform, annotationText) {
+function renderStoryChart(decade, region, platform, annotationText) {
   const decadeStart = +decade;
   let filtered = data.filter(d =>
     d.year >= decadeStart && d.year < decadeStart + 10 &&
@@ -111,13 +112,14 @@ function renderStoryChart(containerId, decade, region, platform, annotationText)
     .slice(0, 20);
 
   
-  drawBarChart(topGames, region, annotationText, containerId);
+  drawBarChart(topGames, region, annotationText);
 }
 
 function updateChart() {
   const decade = d3.select("#decade").node().value;
   const platform = d3.select("#platform").node().value;
   const region = d3.select("#region").node().value;
+  console.log(region);
 
   let filtered = data;
 
@@ -160,16 +162,13 @@ function updateChart() {
             default:
                 axis_title = "Global Sales (Millions)";
     }
-
-  for(var i = 0; i < 20; i++) {
-    console.log(topGames[i]);
-  }
   drawBarChart(topGames, region, axis_title);
 }
 
-function drawBarChart(games, regionSales, region = null, containerId = "explore") {
+function drawBarChart(games, regionSales, axis_label = null) {
   let svg = svgExplore;
-  // Scales
+  //Save the current region for tooltips
+  currRegion = regionSales;
   const x = d3.scaleLinear()
     .domain([0, d3.max(games, d => d[regionSales])])
     .range([0, width]);
@@ -181,24 +180,20 @@ function drawBarChart(games, regionSales, region = null, containerId = "explore"
 
   const tooltip = d3.select("#tooltip");
 
-  // JOIN
-  const bars = svg.selectAll("rect").data(games, d => d.name);
+  const bars = svg.selectAll("rect").data(games, d => `${d.name}-${d[regionSales]}`);
 
 
 
-  // EXIT
   bars.exit()
     .transition().duration(500)
     .attr("width", 0)
     .remove();
 
-  // UPDATE
   bars.transition().duration(500)
     .attr("y", d => y(d.name))
     .attr("width", d => x(d[regionSales]))
     .attr("height", y.bandwidth());
 
-  // ENTER
   const addedBars = bars.enter()
     .append("rect")
     .attr("x", 0)
@@ -207,6 +202,7 @@ function drawBarChart(games, regionSales, region = null, containerId = "explore"
     .attr("width", 0)
     .attr("fill", "#69b3a2")
     .on("mouseover", function(event, d) {
+      console.log("Tooltip data:", d);
     tooltip
       .style("visibility", "visible")
       .html(`
@@ -214,7 +210,7 @@ function drawBarChart(games, regionSales, region = null, containerId = "explore"
         Platform: ${d.platform}<br>
         Year: ${d.year}<br>
         Publisher: ${d.publisher} <br>
-        Regional Sales: ${d[regionSales].toFixed(2)} Million <br>
+        Regional Sales: ${d[currRegion].toFixed(2)} Million <br>
         Global Sales: ${d.globalSales.toFixed(2)} Million
       `);
   })
@@ -257,7 +253,7 @@ if (xLabel.empty()) {
     .attr("y", height + 40);
 }
 
-xLabel.text(region || "Sales (millions)");
+xLabel.text(axis_label || "Sales (millions)");
 
 svg.append("g")
   .attr("class", "y-axis")
